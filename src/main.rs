@@ -49,7 +49,7 @@ mod shell {
     pub fn print_welcome_message() {
         println!(
             "Welcome to rush! Current time is {}",
-            chrono::Utc::now().format("%Y-%m-%d %H:%M:%S")
+            chrono::Local::now().format("%Y-%m-%d %H:%M:%S")
         );
     }
 
