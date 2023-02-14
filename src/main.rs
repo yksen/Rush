@@ -1,8 +1,9 @@
 use std::io;
 
 fn main() -> io::Result<()> {
-    let mut input = String::new();
+    shell::print_welcome_message();
 
+    let mut input = String::new();
     while shell::process_input(input.clone().into()) != shell::ReturnCode::Exit {
         input.clear();
         io::stdin().read_line(&mut input)?;
@@ -12,6 +13,8 @@ fn main() -> io::Result<()> {
 }
 
 mod shell {
+    use std::fmt::Debug;
+
     pub struct Input {
         command: Command,
         args: Vec<String>,
@@ -41,6 +44,13 @@ mod shell {
     pub enum ReturnCode {
         Success,
         Exit,
+    }
+
+    pub fn print_welcome_message() {
+        println!(
+            "Welcome to rush! Current time is {}",
+            chrono::Utc::now().format("%Y-%m-%d %H:%M:%S")
+        );
     }
 
     pub fn process_input(input: Input) -> ReturnCode {
