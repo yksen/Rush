@@ -20,7 +20,7 @@ impl From<String> for Input {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum ReturnCode {
     Success,
     Exit,
@@ -59,5 +59,20 @@ fn process_input(input: Input) -> ReturnCode {
     match input.command.as_str() {
         "exit" | "quit" => commands::exit(),
         _ => ReturnCode::Success,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn process_input_exit_command() {
+        assert_eq!(process_input(String::from("exit").into()), ReturnCode::Exit);
+    }
+
+    #[test]
+    fn process_input_exit_command_mixed_case() {
+        assert_eq!(process_input(String::from("ExIt").into()), ReturnCode::Exit);
     }
 }
