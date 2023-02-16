@@ -1,4 +1,8 @@
 mod commands;
+
+use std::io::{self, Write};
+
+#[derive(Debug)]
 pub struct Input {
     command: String,
     args: Vec<String>,
@@ -22,14 +26,36 @@ pub enum ReturnCode {
     Exit,
 }
 
-pub fn print_welcome_message() {
+pub fn init() -> io::Result<()> {
+    print_welcome_message();
+    shell_loop()?;
+    Ok(())
+}
+
+fn print_welcome_message() {
     println!(
         "Welcome to rush! Current time is {}",
         chrono::Local::now().format("%Y-%m-%d %H:%M:%S")
     );
 }
 
-pub fn process_input(input: Input) -> ReturnCode {
+fn shell_loop() -> Result<(), io::Error> {
+    let mut input = String::new();
+    while process_input(input.clone().into()) != ReturnCode::Exit {
+        input.clear();
+        print_command_prompt()?;
+        io::stdin().read_line(&mut input)?;
+    }
+    Ok(())
+}
+
+fn print_command_prompt() -> io::Result<()> {
+    print!("> ");
+    io::stdout().flush()?;
+    Ok(())
+}
+
+fn process_input(input: Input) -> ReturnCode {
     match input.command.as_str() {
         "exit" | "quit" => commands::exit(),
         _ => ReturnCode::Success,
